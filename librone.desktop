@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Librone
+Comment=Scarica ebook in italiano
+Exec=librone
+Icon=librone
+Terminal=true
+Categories=Office;Viewer;
