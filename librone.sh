@@ -19,7 +19,27 @@ echo -e "${GREENB}                       / /   / / __ \/ ___/ __ \/ __ \/ _ \   
 echo -e "${GREENB}                      / /___/ / /_/ / /  / /_/ / / / /  __/                     ${NC}"
 echo -e "${GREENB}                     /_____/_/_____/_/   \____/_/ /_/\___/                      ${NC}"
 echo
-echo -e "------------------------------------------------------------${GREEN}versione 1.2 2022${NC}---"
+echo -e "------------------------------------------------------------${GREEN}versione 1.3 2022${NC}---"
+echo
+echo -e "${GREENB}controllo che il server sia funzionante dammi qualche secondo ...${NC}"
+echo
+libri=$(curl --silent -I -m 5 https://libri.life | awk 'NR ==1 {print $2}')
+dwnlg=$(curl --silent -I -m 5 https://dwnlg.link/ | awk 'NR ==1 {print $2}')
+if [ $libri$dwnlg -eq 200200 ];
+then
+status=${GREEN}UP${NC}
+echo -e Il server è $status
+else
+status=${RED}DOWN${NC}
+echo -e Il server è $status
+echo
+echo sembra che non sia possibile continuare perche' il server e' down
+echo
+echo ================================================================================
+echo
+sleep 5
+exit 0
+fi
 echo
 echo "Che libro cerchi oggi?"
 while [ $ricomincia="si" ]; do
@@ -27,6 +47,7 @@ echo
 echo "Inserisci il titolo o l'autore"
 echo   
 read -r ricerca
+ricerca1=$(echo $ricerca | sed 's/ /%20/g')
 echo   
 echo "Interessante ..."
 echo   
@@ -34,8 +55,8 @@ echo -e "${GREENB}Dammi un attimo per cercarlo ...${NC}"
 echo   
 echo 
 echo ----------------------------------------------------------------------------------
-risultato=$(curl -v --silent https://libri.life/search/"$ricerca"/feed/rss2/ 2>&1 | grep 'Dati del libro' | sed -n -e 's/^.*libro //p' | sed 's/ Anno.*//' | awk '! /Titolo: /' | sed "s/-//g" | sed "s/&#8211;/-/g" | sed 's/Titolo:/ /g' | sed 's/ Autore: / - /g' | sed 's/\[\]<\/p>//g' | sort -u | awk '{print NR-0 "" $0}' | awk '{sub("$", "\033[1m\033[30;92m", $0)}; 1' | awk '{sub("$", "\033[0m)", $1)}; 1') # decisamente da migliorare, è lento
-risultatone=$(curl -v --silent https://libri.life/search/"$ricerca"/feed/rss2/ 2>&1 | grep 'Dati del libro' | sed -n -e 's/^.*libro //p' | sed 's/ Anno.*//' | awk '! /Titolo: /' | sed "s/-//g" | sed "s/&#8211;/-/g" | sed 's/Titolo:/ /g' | sed 's/ Autore: / - /g' | sort -u | awk '{print NR-0 "" $0}') # decisamente da migliorare, è lento
+risultato=$(curl -v --silent https://libri.life/search/"$ricerca1"/feed/rss2/ 2>&1 | grep 'Dati del libro' | sed -n -e 's/^.*libro //p' | sed 's/ Anno.*//' | awk '! /Titolo: /' | sed "s/-//g" | sed "s/&#8211;/-/g" | sed 's/Titolo:/ /g' | sed 's/ Autore: / - /g' | sed 's/\[\]<\/p>//g' | sort -u | awk '{print NR-0 "" $0}' | awk '{sub("$", "\033[1m\033[30;92m", $0)}; 1' | awk '{sub("$", "\033[0m)", $1)}; 1') # decisamente da migliorare, è lento
+risultatone=$(curl -v --silent https://libri.life/search/"$ricerca1"/feed/rss2/ 2>&1 | grep 'Dati del libro' | sed -n -e 's/^.*libro //p' | sed 's/ Anno.*//' | awk '! /Titolo: /' | sed "s/-//g" | sed "s/&#8211;/-/g" | sed 's/Titolo:/ /g' | sed 's/ Autore: / - /g' | sort -u | awk '{print NR-0 "" $0}') # decisamente da migliorare, è lento
 while [ -z "$risultato" ]
 do
 echo   
@@ -48,10 +69,11 @@ echo
 echo "Prova a cercare altro. Inserisci il titolo o l'autore"
 echo   
 read -r ricerca
+ricerca1=$(echo $ricerca | sed 's/ /%20/g')
 echo   
 echo -e "${GREENB}Dammi un attimo per cercarlo ...${NC}"
-risultato=$(curl -v --silent https://libri.life/search/"$ricerca"/feed/rss2/ 2>&1 | grep 'Dati del libro' | sed -n -e 's/^.*libro //p' | sed 's/ Anno.*//' | awk '! /Titolo: /' | sed "s/-//g" | sed "s/&#8211;/-/g" | sed 's/Titolo:/ /g' | sed 's/ Autore: / - /g' | sed 's/\[\]<\/p>//g' | sort -u | awk '{print NR-0 "" $0}' | awk '{sub("$", "\033[1m\033[30;92m", $0)}; 1' | awk '{sub("$", "\033[0m)", $1)}; 1') # decisamente da migliorare, è lento
-risultatone=$(curl -v --silent https://libri.life/search/"$ricerca"/feed/rss2/ 2>&1 | grep 'Dati del libro' | sed -n -e 's/^.*libro //p' | sed 's/ Anno.*//' | awk '! /Titolo: /' | sed "s/-//g" | sed "s/&#8211;/-/g" | sed 's/Titolo:/ /g' | sed 's/ Autore: / - /g' | sort -u | awk '{print NR-0 "" $0}') # decisamente da migliorare, è lento
+risultato=$(curl -v --silent https://libri.life/search/"$ricerca1"/feed/rss2/ 2>&1 | grep 'Dati del libro' | sed -n -e 's/^.*libro //p' | sed 's/ Anno.*//' | awk '! /Titolo: /' | sed "s/-//g" | sed "s/&#8211;/-/g" | sed 's/Titolo:/ /g' | sed 's/ Autore: / - /g' | sed 's/\[\]<\/p>//g' | sort -u | awk '{print NR-0 "" $0}' | awk '{sub("$", "\033[1m\033[30;92m", $0)}; 1' | awk '{sub("$", "\033[0m)", $1)}; 1') # decisamente da migliorare, è lento
+risultatone=$(curl -v --silent https://libri.life/search/"$ricerca1"/feed/rss2/ 2>&1 | grep 'Dati del libro' | sed -n -e 's/^.*libro //p' | sed 's/ Anno.*//' | awk '! /Titolo: /' | sed "s/-//g" | sed "s/&#8211;/-/g" | sed 's/Titolo:/ /g' | sed 's/ Autore: / - /g' | sort -u | awk '{print NR-0 "" $0}') # decisamente da migliorare, è lento
 echo   
 echo ----------------------------------------------------------------------------------
 done
