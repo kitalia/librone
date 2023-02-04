@@ -1,3 +1,6 @@
+# ATTENZIONE
+Il sito da cui questo script scaricava i libri non esiste più quindi questa repo è stata archiviata
+
 # librone
 scarica e-book in italiano | ebook
 
